@@ -18,6 +18,7 @@ import { ClientesPages } from "./pages/ClientesPages.jsx";
 import { VehiculosPages } from "./pages/VehiculosPages.jsx";
 import { RentasPages } from "./pages/RentasPages.jsx";
 import { InspeccionesPages } from "./pages/InspeccionesPages.jsx";
+import { ReporteRentasPages } from "./pages/ReporteRentasPages.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -52,8 +53,10 @@ function App() {
           <Route path="/vehiculos" element={<VehiculosPages />}></Route>
           <Route path="/rentas" element={<RentasPages />}></Route>
           <Route path="/inspecciones" element={<InspeccionesPages />}></Route>
+          <Route path="/reporteRentas" element={<ReporteRentasPages />}></Route>
 
-          <Route path="/login" element={<Login />}></Route>
+
+            <Route path="/login" element={<Login />}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </RentCarContextProvider>

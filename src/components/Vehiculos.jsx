@@ -31,11 +31,6 @@ export const Vehiculos = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  /* const [show2, setShow2] = useState(false);
-
-  const handleClose2 = () => setShow2(false);
-  const handleShow2 = () => setShow2(true); */
-
   const [vehiculo, setVehiculo] = useState(vehiculoDefault);
 
   const [marcaId, setMarcaId] = useState(null);
@@ -187,6 +182,228 @@ export const Vehiculos = () => {
 
       <Modal show={show} onHide={handleClose} className="p-4">
         <form
+          className="d-flex flex-wrap justify-content-start mt-4 mb-4 m-5 gap-5"
+          onSubmit={editing ? handleUpdate : handleSubmit}
+          id="vehiculoForm"
+        >
+          <div className="w-100">
+            <label htmlFor="descripcion" className="form-label">
+              Descripción
+            </label>
+            <input
+              type="text"
+              id="descripcion"
+              name="Descripcion"
+              placeholder="Descripción"
+              onChange={(e) =>
+                setVehiculo((prevData) => ({
+                  ...prevData,
+                  descripcion: e.target.value,
+                }))
+              }
+              value={vehiculo.descripcion}
+              required
+              className="form-control w-100"
+            />
+          </div>
+
+          <div className="w-100">
+            <label htmlFor="marca" className="form-label">
+              Marca
+            </label>
+            <select
+              id="marca"
+              value={marcaId || ""}
+              onChange={(e) => {
+                const selected = data.Marcas.find(
+                  (marca) => marca.id === Number(e.target.value)
+                );
+                setMarcaId(selected?.id);
+              }}
+              required
+              className="form-select"
+            >
+              <option value="">Elige una marca</option>
+              {data.Marcas ? (
+                data.Marcas.map((marca) => (
+                  <option
+                    value={marca.id}
+                    key={marca.id}
+                    disabled={marca.Estado === "Inactivo"}
+                  >
+                    {marca.Nombre}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No hay marcas disponibles</option>
+              )}
+            </select>
+          </div>
+
+          <div className="w-100">
+            <label htmlFor="modelo" className="form-label">
+              Modelo
+            </label>
+            <select
+              id="modelo"
+              value={modeloId || ""}
+              onChange={(e) => {
+                const selected = data.Modelos.find(
+                  (modelo) => modelo.id === Number(e.target.value)
+                );
+                setModeloId(selected?.id);
+              }}
+              required
+              className="form-select"
+            >
+              <option value="">Elige un Modelo</option>
+              {data.Modelos ? (
+                data.Modelos.map((modelo) => (
+                  <option
+                    value={modelo.id}
+                    key={modelo.id}
+                    disabled={modelo.Estado === "Inactivo"}
+                  >
+                    {modelo.Nombre}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No hay modelos disponibles</option>
+              )}
+            </select>
+          </div>
+
+          <div className="w-100">
+            <label htmlFor="tipoVehiculo" className="form-label">
+              Tipo de Vehículo
+            </label>
+            <select
+              id="tipoVehiculo"
+              value={tipoVehiculoId || ""}
+              onChange={(e) => {
+                const selected = data.TiposVehiculos.find(
+                  (tipoVehiculo) => tipoVehiculo.id === Number(e.target.value)
+                );
+                setTipoVehiculoId(selected?.id);
+              }}
+              required
+              className="form-select"
+            >
+              <option value="">Tipo de Vehículo</option>
+              {data.TiposVehiculos ? (
+                data.TiposVehiculos.map((tipoVehiculo) => (
+                  <option
+                    value={tipoVehiculo.id}
+                    key={tipoVehiculo.id}
+                    disabled={tipoVehiculo.Estado === "Inactivo"}
+                  >
+                    {tipoVehiculo.Nombre}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No hay tipos de vehículos disponibles</option>
+              )}
+            </select>
+          </div>
+
+          <div className="w-100">
+            <label htmlFor="combustible" className="form-label">
+              Combustible
+            </label>
+            <select
+              id="combustible"
+              value={tipoCombustibleId || ""}
+              onChange={(e) => {
+                const selected = data.Combustibles.find(
+                  (combustible) => combustible.id === Number(e.target.value)
+                );
+                setTipoCombustibleId(selected?.id);
+              }}
+              required
+              className="form-select"
+            >
+              <option value="">Combustible</option>
+              {data.Combustibles ? (
+                data.Combustibles.map((combustible) => (
+                  <option
+                    value={combustible.id}
+                    key={combustible.id}
+                    disabled={combustible.Estado === "Inactivo"}
+                  >
+                    {combustible.Nombre}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No hay combustibles disponibles</option>
+              )}
+            </select>
+          </div>
+
+          <div className="w-100">
+            <label htmlFor="placa" className="form-label">
+              Placa
+            </label>
+            <input
+              type="text"
+              id="placa"
+              name="Placa"
+              placeholder="Placa"
+              onChange={(e) =>
+                setVehiculo((prevData) => ({
+                  ...prevData,
+                  placa: e.target.value,
+                }))
+              }
+              value={vehiculo.placa}
+              required
+              className="form-control w-100"
+            />
+          </div>
+
+          <div className="w-100">
+            <label htmlFor="chasis" className="form-label">
+              Chasis
+            </label>
+            <input
+              type="text"
+              id="chasis"
+              name="Chasis"
+              placeholder="Chasis"
+              onChange={(e) =>
+                setVehiculo((prevData) => ({
+                  ...prevData,
+                  chasis: e.target.value,
+                }))
+              }
+              value={vehiculo.chasis}
+              required
+              className="form-control w-100"
+            />
+          </div>
+
+          <div className="w-100">
+            <label htmlFor="numMotor" className="form-label">
+              Número de Motor
+            </label>
+            <input
+              type="text"
+              id="numMotor"
+              name="NumMotor"
+              placeholder="Número de Motor"
+              onChange={(e) =>
+                setVehiculo((prevData) => ({
+                  ...prevData,
+                  numMotor: e.target.value,
+                }))
+              }
+              value={vehiculo.numMotor}
+              required
+              className="form-control w-100"
+            />
+          </div>
+        </form>
+
+        {/*  <form
           className="d-flex flex-wrap justify-content-start mt-4 mb-4 m-5 gap-5"
           onSubmit={editing ? handleUpdate : handleSubmit}
           id="vehiculoForm"
@@ -372,7 +589,7 @@ export const Vehiculos = () => {
             className="form-control w-100"
           />
         </form>
-
+ */}
         <Modal.Footer>
           <input
             type="submit"
@@ -394,7 +611,7 @@ export const Vehiculos = () => {
         </Modal.Footer>
       </Modal>
 
-    {/*   <ModalEliminar
+      {/*   <ModalEliminar
         show2={show2}
         handleClose2={handleClose2}
         handleDelete={handleDelete}
@@ -452,7 +669,6 @@ export const Vehiculos = () => {
                         handleToggleEstado(vehiculo.id, vehiculo.Estado)
                       }
                     >
-                      
                       {vehiculo.Estado === "Activo" ? "Desactivar" : "Activar"}
                     </button>
                   </div>

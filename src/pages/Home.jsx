@@ -36,6 +36,7 @@ export const Home = () => {
         <MenuCard name={"Vehiculos"} link={"/vehiculos"} />
         <MenuCard name={"Rentas"} link={"/rentas"} />
         <MenuCard name={"Inspecciones"} link={"/inspecciones"} />
+        <MenuCard name={"Reportes de Rentas"} link={"/reporteRentas"} />
       </div>
     </div>
   );

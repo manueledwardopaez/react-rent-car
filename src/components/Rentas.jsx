@@ -26,6 +26,8 @@ export const Rentas = () => {
     estado: "Activo",
   };
 
+  const [filtro, setFiltro] = useState(""); 
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -59,6 +61,9 @@ export const Rentas = () => {
     fetchData("Clientes");
     fetchData(tableName, relations);
     setIsSubmitted(false);
+    setTimeout(() => {
+      console.log(data.Rentas)
+    }, 4000);
   }, [fetchData, relations, isSubmitted]);
 
   const handleSubmit = async (e) => {
@@ -195,6 +200,14 @@ export const Rentas = () => {
     }
   };
 
+  const filteredRentas = (data.Rentas || []).filter((renta) => {
+    // Si hay un filtro seleccionado, filtra las rentas por el ID del vehículo
+    if (filtro) {
+      return renta.Vehiculo.id === filtro;
+    }
+    return true; // Si no hay filtro, mostrar todas las rentas
+  });
+
   return (
     <div>
       <h2>Rentas</h2>
@@ -202,6 +215,35 @@ export const Rentas = () => {
       <Button variant="primary" onClick={handleShow} className="mt-4 mb-4">
         Rentar Vehiculo
       </Button>
+
+      <div className="w-25 mb-4">
+        <label htmlFor="filtro" className="form-label">
+          Filtrar por Vehiculo
+        </label>
+        <select
+          value={filtro || ""}
+          onChange={(e) => {
+            const selected = data.Vehiculos.find(
+              (vehiculo) => vehiculo.id === Number(e.target.value)
+            );
+            setFiltro(selected?.id);
+          }}
+          required
+          className="form-select"
+          id="vehiculosId"
+        >
+          <option value="">Seleccion</option>
+          {data.Vehiculos && data.Vehiculos.length > 0 ? (
+            data.Vehiculos.map((vehiculo) => (
+              <option key={vehiculo.id} value={vehiculo.id}>
+                {vehiculo.Descripcion}
+              </option>
+            ))
+          ) : (
+            <option disabled>No hay vehículos disponibles</option>
+          )}
+        </select>
+      </div>
 
       <Modal show={show} onHide={handleClose} className="p-4">
         <form
@@ -461,7 +503,7 @@ export const Rentas = () => {
         <p>No hay rentas disponibles</p>
       ) : (
         <div className="row">
-          {data.Rentas.slice(0, 10).map((renta) => (
+          {filteredRentas.map((renta) => (
             <div key={renta.id} className="col-md-6 col-lg-4 mb-3">
               <div className="card shadow-sm">
                 <div className="card-body">

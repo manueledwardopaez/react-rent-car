@@ -1,15 +1,14 @@
 export const validarCedula = (cedula) => {
-  // Eliminar guiones y espacios en blanco
   cedula = String(cedula).replace(/[-\s]/g, "");
 
-  // Validar que tenga exactamente 11 dígitos y sea numérica
-  if (!cedula.length === 11) {
+
+  if (cedula.length !== 11) { 
     return false;
   }
 
-  // Algoritmo de verificación de cédula
   let suma = 0;
-  let multiplicadores = [1, 2]; // Alterna entre 1 y 2
+  let multiplicadores = [1, 2]; 
+
   for (let i = 0; i < 10; i++) {
     let num = parseInt(cedula[i]) * multiplicadores[i % 2];
     suma += num > 9 ? num - 9 : num;
@@ -19,16 +18,17 @@ export const validarCedula = (cedula) => {
   return digitoVerificador === parseInt(cedula[10]);
 };
 
+
 export const validarTarjetaCredito = (tarjeta) => {
-  // Eliminar espacios y guiones
+
   tarjeta = String(tarjeta).replace(/[\s-]/g, "");
 
-  // Validar que sea solo numérico y tenga una longitud válida (13-19 dígitos)
+  
   if (!/^\d{13,19}$/.test(tarjeta)) {
     return false;
   }
 
-  // Implementación del algoritmo de Luhn
+
   let suma = 0;
   let alternar = false;
 
@@ -89,8 +89,7 @@ export const validarRenta = (renta) => {
 
   const diasCalculados = Math.round(diff / (1000 * 60 * 60 * 24));
 
-  console.log(typeof diasCalculados);
-  console.log(typeof cantDias);
+  
   if (cantDias <= 0 || cantDias != diasCalculados) {
     return { valido: false, mensaje: "La cantidad de días es incorrecta." };
   }

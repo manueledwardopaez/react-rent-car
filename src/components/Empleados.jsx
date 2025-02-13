@@ -156,7 +156,7 @@ export const Empleados = () => {
 
         <input
           required
-          type="number"
+          type="text"
           name="cedula"
           placeholder="Cedula"
           onChange={(e) =>

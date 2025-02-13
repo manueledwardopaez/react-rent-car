@@ -12,6 +12,13 @@ export const Inspecciones = () => {
     Cliente (Nombre, id)
   `;
 
+  const gomas = [
+    "Delantera Izquierda",
+    "Delantera Derecha",
+    "Trasera Izquierda",
+    "Trasera Derecha",
+  ]
+
   const inspeccionDefault = {
     vehiculo: "",
     empleado: "",
@@ -59,9 +66,6 @@ export const Inspecciones = () => {
     fetchData("Clientes");
     fetchData(tableName, relations);
     setIsSubmitted(false);
-    setTimeout(() => {
-      console.log(data.Inspecciones);
-    }, 4000);
   }, [fetchData, relations, isSubmitted]);
 
   const handleSubmit = async (e) => {
@@ -121,7 +125,7 @@ export const Inspecciones = () => {
       cliente: inspeccion.Cliente,
       ralladuras: inspeccion.Ralladuras,
       cantCombustible: inspeccion.CantCombustible,
-      GomaRepuesto: inspeccion.gomaRepuesto,
+      gomaRepuesto: inspeccion.GomaRepuesto,
       gato: inspeccion.Gato,
       roturasCristal: inspeccion.RoturasCristal,
       estadoGomas: inspeccion.EstadoGomas,
@@ -161,6 +165,7 @@ export const Inspecciones = () => {
         Fecha: inspeccion.fecha,
         Estado: "Activo",
       });
+      console.log(inspeccion.estadoGomas);
       setEditing(null);
       setInspeccion({
         ...inspeccionDefault,
@@ -317,6 +322,7 @@ export const Inspecciones = () => {
               <option value="">Ralladuras</option>
               <option value="Si">Si</option>
               <option value="No">No</option>
+            
             </select>
           </div>
 
@@ -337,8 +343,10 @@ export const Inspecciones = () => {
               aria-label="Selecciona"
             >
               <option value="">Seleccion</option>
-              <option value="Si">Si</option>
-              <option value="No">No</option>
+              <option value="1/2">1/2</option>
+              <option value="1/3">1/3</option>
+              <option value="1/4">1/4</option>
+              <option value="Lleno">Lleno</option>
             </select>
           </div>
 
@@ -352,6 +360,28 @@ export const Inspecciones = () => {
                 setInspeccion((prevData) => ({
                   ...prevData,
                   gomaRepuesto: e.target.value,
+                }))
+              }
+              required
+              className="form-select w-100"
+              aria-label="Selecciona"
+            >
+              <option value="">Seleccion</option>
+              <option value="Si">Si</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div className=" w-100">
+            <label htmlFor="" className="form-label">
+              Tiene Gato
+            </label>
+            <select
+              value={inspeccion.gato}
+              onChange={(e) =>
+                setInspeccion((prevData) => ({
+                  ...prevData,
+                  gato: e.target.value,
                 }))
               }
               required
@@ -406,24 +436,34 @@ export const Inspecciones = () => {
             />
           </div>
 
-          <div className=" w-100">
-            <label htmlFor="estadoGomas" className="form-label">
-              Estado de las Gomas
-            </label>
-            <input
-              type="text"
-              name="estadoGomas"
-              onChange={(e) =>
-                setInspeccion((prevData) => ({
-                  ...prevData,
-                  estadoGomas: e.target.value,
-                }))
-              }
-              value={inspeccion.estadoGomas}
-              required
-              className="form-control w-100"
-              id="estadoGomas"
-            />
+          <div className="w-100">
+            <label className="form-label">Estado de las Gomas</label>
+              
+            <div className="d-flex flex-wrap gap-2">
+              
+              {gomas.map((goma, index) => (
+                <div key={index} className="form-check">
+                  <input
+                    type="checkbox"
+                    id={`goma-${index}`}
+                    className="form-check-input"
+                    checked={inspeccion.estadoGomas.includes(goma)}
+                    onChange={(e) => {
+                      setInspeccion((prevData) => {
+                        const nuevaLista = e.target.checked
+                          ? [...prevData.estadoGomas, goma] // Agregar si está checked
+                          : prevData.estadoGomas.filter((g) => g !== goma); // Quitar si está unchecked
+
+                        return { ...prevData, estadoGomas: nuevaLista };
+                      });
+                    }}
+                  />
+                  <label htmlFor={`goma-${index}`} className="form-check-label">
+                    {goma}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
         </form>
 
@@ -459,7 +499,7 @@ export const Inspecciones = () => {
                   <h5 className="card-title mb-4">
                     Inspeccion #{inspeccion.id}
                   </h5>
-                  <p className="card-text text-start">
+                  <div className="card-text text-start ">
                     <strong>Vehículo:</strong> {inspeccion.Vehiculo.Descripcion}{" "}
                     <br />
                     <strong>Empleado:</strong> {inspeccion.Empleado.Nombre}{" "}
@@ -473,8 +513,17 @@ export const Inspecciones = () => {
                     <strong>Gato:</strong> {inspeccion.Gato} <br />
                     <strong>Roturas de Cristal:</strong>{" "}
                     {inspeccion.RoturasCristal} <br />
-                    <strong>Estado Gomas:</strong> {inspeccion.EstadoGomas}{" "}
-                    <br />
+                    <strong>Gomas que revisar:</strong>
+                    <ul className="list-unstyled mb-0">
+                      {inspeccion.EstadoGomas.length > 0 ? (
+                        inspeccion.EstadoGomas.map((goma, index) => (
+                          <li key={index}>{goma}</li>
+                        ))
+                      ) : (
+                        <li>Ninguna</li>
+                      )}
+                    </ul>
+                    {/*  <br /> */}
                     <strong>Fecha:</strong> {inspeccion.Fecha} <br />
                     <strong>Estado:</strong>
                     <span
@@ -486,8 +535,8 @@ export const Inspecciones = () => {
                     >
                       {inspeccion.Estado}
                     </span>
-                  </p>
-                  <div className="d-flex justify-content-between">
+                  </div>
+                  <div className="d-flex justify-content-between mt-2">
                     <button
                       className="btn btn-sm btn-warning"
                       onClick={() => handleEdit(inspeccion)}
