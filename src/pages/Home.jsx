@@ -24,7 +24,7 @@ export const Home = () => {
         </p>
       </div>
 
-      <div className="d-flex flex-wrap gap-3">
+      <div className="d-flex flex-wrap gap-3 justify-content-center">
        
         <MenuCard name={"Marcas"} link={"/marcas"} />
         <MenuCard name={"Modelos"} link={"/modelos"} />
