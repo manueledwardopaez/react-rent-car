@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRentCar } from "../context/RentCarContext";
+import { ToastContainer, toast } from "react-toastify";
 
 export const Marcas = () => {
-
-  const tableName = "Marcas"
-  
+  const tableName = "Marcas";
 
   const {
     data,
@@ -27,7 +26,8 @@ export const Marcas = () => {
     e.preventDefault();
     try {
       await createData(tableName, { Nombre: marcaNombre, Estado: "Activo" });
-      setMarcaNombre(""); // Limpiar el campo después de crear
+      setMarcaNombre("");
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     }
@@ -37,6 +37,7 @@ export const Marcas = () => {
   const handleDelete = async (id) => {
     try {
       await deleteData(tableName, id);
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
@@ -56,13 +57,11 @@ export const Marcas = () => {
   const handleEdit = (marca) => {
     setEditing(marca); // Establecer la marca que se está editando
     setMarcaNombre(marca.Nombre); // Llenar el campo de texto con el nombre actual
-    
   };
 
   const handleCancelEdit = () => {
     setEditing(null);
     setMarcaNombre("");
-   
   };
 
   // Función para actualizar una marca
@@ -79,10 +78,13 @@ export const Marcas = () => {
 
   return (
     <div>
-      
+      <ToastContainer />
       <h2>Marcas</h2>
 
-      <form className="d-flex justify-content-center gap-3 mt-4 mb-4" onSubmit={editing ? handleUpdate : handleSubmit}>
+      <form
+        className="d-flex justify-content-center gap-3 mt-4 mb-4"
+        onSubmit={editing ? handleUpdate : handleSubmit}
+      >
         <input
           type="text"
           name="marcaNombre"
@@ -91,13 +93,17 @@ export const Marcas = () => {
           value={marcaNombre}
           required
           className="form-control"
-          style={{maxWidth: "250px"}}
+          style={{ maxWidth: "250px" }}
         />
         <button className="btn btn-success" disabled={adding}>
           {adding ? "Procesando..." : editing ? "Actualizar" : "Agregar"}
         </button>
         {editing && (
-          <button className="btn btn-danger" type="button" onClick={() => handleCancelEdit()}>
+          <button
+            className="btn btn-danger"
+            type="button"
+            onClick={() => handleCancelEdit()}
+          >
             Cancelar
           </button>
         )}
@@ -163,7 +169,6 @@ export const Marcas = () => {
                       </li>
                     </ul>
                   </div>
-             
                 </td>
               </tr>
             ))}

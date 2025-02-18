@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRentCar } from "../context/RentCarContext";
+import { ToastContainer, toast } from "react-toastify";
 
 export const TiposVehiculos = () => {
   const tableName = "TiposVehiculos";
@@ -28,6 +29,7 @@ export const TiposVehiculos = () => {
         Estado: "Activo",
       });
       setTipoVehiculoNombre("");
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     }
@@ -36,6 +38,7 @@ export const TiposVehiculos = () => {
   const handleDelete = async (id) => {
     try {
       await deleteData(tableName, id);
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
@@ -73,6 +76,7 @@ export const TiposVehiculos = () => {
 
   return (
     <div>
+        <ToastContainer />
       <h2>Tipos de Vehiculos</h2>
       <form
         className="d-flex justify-content-center gap-3 mt-4 mb-4"

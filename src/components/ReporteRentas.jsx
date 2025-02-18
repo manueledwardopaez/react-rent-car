@@ -58,7 +58,7 @@ export const ReporteRentas = () => {
         </select>
       </div>
 
-      <button className={"btn btn-warning w-25"} onClick={() => generarReporteVentas(rentasFiltradas)}>
+      <button className={"btn btn-warning w-25 boton"} onClick={() => generarReporteVentas(rentasFiltradas)}>
         Descargar Reporte de Ventas
       </button>
         </div>

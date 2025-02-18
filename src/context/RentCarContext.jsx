@@ -3,7 +3,6 @@ import { supabase } from "../supabase/client";
 
 export const RentCarContext = createContext();
 
-
 export const RentCarContextProvider = ({ children }) => {
   const [data, setData] = useState({}); // Guarda datos de diferentes tablas
   const [loading, setLoading] = useState(false);
@@ -13,7 +12,15 @@ export const RentCarContextProvider = ({ children }) => {
   const fetchData = useCallback(async (table, relations = "") => {
     try {
       setLoading(true);
-      const { data: result, error } = await supabase.from(table).select(`*${relations ? `, ${relations}` : ""}`);
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const { data: result, error } = await supabase
+        .from(table)
+        .select(`*${relations ? `, ${relations}` : ""}`)
+        .eq("userId", user.id);
       if (error) throw error;
 
       setData((prevData) => ({ ...prevData, [table]: result }));
@@ -27,7 +34,7 @@ export const RentCarContextProvider = ({ children }) => {
   // 🔹 Función genérica para insertar datos en cualquier tabla
   const createData = async (table, newData) => {
     setLoading(true);
-    setAdding(true)
+    setAdding(true);
     try {
       const {
         data: { user },
@@ -54,13 +61,13 @@ export const RentCarContextProvider = ({ children }) => {
   // 🔹 Función genérica para actualizar datos en cualquier tabla
   const updateData = async (table, id, updateFields) => {
     try {
-      /* const {
+      const {
         data: { user },
-      } = await supabase.auth.getUser(); */
+      } = await supabase.auth.getUser();
       const { data: updatedData, error } = await supabase
         .from(table)
         .update(updateFields)
-       /*  .eq("userId", user.id) */
+        .eq("userId", user.id)
         .eq("id", id)
         .select();
 
@@ -80,13 +87,13 @@ export const RentCarContextProvider = ({ children }) => {
   // 🔹 Función genérica para eliminar datos de cualquier tabla
   const deleteData = async (table, id) => {
     try {
-      /* const {
+      const {
         data: { user },
-      } = await supabase.auth.getUser(); */
+      } = await supabase.auth.getUser();
       const { error } = await supabase
         .from(table)
         .delete()
-        /* .eq("userId", user.id) */
+        .eq("userId", user.id)
         .eq("id", id);
 
       if (error) throw error;

@@ -40,7 +40,6 @@ export const Modelos = () => {
         Marca: marca.id,
       });
       setModeloNombre("");
-  
     } catch (error) {
       console.error("Error al crear la marca:", error);
     } finally {
@@ -92,6 +91,10 @@ export const Modelos = () => {
       });
       setEditing(null); // Salir del modo de edición
       setModeloNombre(""); // Limpiar el campo de texto
+      setMarca({
+        id: null,
+        nombre: "",
+      });
     } catch (error) {
       console.error("Error al actualizar la marca:", error);
     } finally {
@@ -139,7 +142,11 @@ export const Modelos = () => {
           </option>
           {data.Marcas ? (
             data.Marcas.map((marca) => (
-              <option value={marca.id} key={marca.id} disabled={marca.Estado == "Inactivo" && true}>
+              <option
+                value={marca.id}
+                key={marca.id}
+                disabled={marca.Estado == "Inactivo" && true}
+              >
                 {marca.Nombre}
               </option>
             ))

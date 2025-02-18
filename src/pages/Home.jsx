@@ -10,16 +10,16 @@ export const Home = () => {
   useEffect(() => {
     if (!supabase.auth.getUser()) {
       navigate("/login");
-    }
+    } 
   }, [navigate]);
 
   return (
     <div>
       <div className="mb-4">
-        <h1>Home</h1>
-        <p>
+        <h1 className="text-white">Home</h1>
+        <p className="text-white">
           Bienvenido a nuestro sistema de Rent-a-Car, donde puedes gestionar
-          vehículos, clientes y reservas de forma rápida y eficiente.
+          vehículos, clientes y rentas de forma rápida y eficiente.
           ¡Simplifica tu negocio con nuestra plataforma!
         </p>
       </div>
@@ -29,11 +29,11 @@ export const Home = () => {
         <MenuCard name={"Marcas"} link={"/marcas"} />
         <MenuCard name={"Modelos"} link={"/modelos"} />
         <MenuCard name={"Combustibles"} link={"/tiposDeCombustible"} />
-        <MenuCard name={"Tipos de Vehiculos"} link={"/tiposDeVehiculos"} />
+        <MenuCard name={"Tipos de Vehículos"} link={"/tiposDeVehiculos"} />
         <MenuCard name={"Empleados"} link={"/empleados"} />
         <MenuCard name={"Clientes"} link={"/clientes"} />
 
-        <MenuCard name={"Vehiculos"} link={"/vehiculos"} />
+        <MenuCard name={"Vehículos"} link={"/vehiculos"} />
         <MenuCard name={"Rentas"} link={"/rentas"} />
         <MenuCard name={"Inspecciones"} link={"/inspecciones"} />
         <MenuCard name={"Reportes de Rentas"} link={"/reporteRentas"} />

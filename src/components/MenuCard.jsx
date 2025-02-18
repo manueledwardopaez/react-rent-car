@@ -1,11 +1,13 @@
 import { Link } from "react-router";
 
-
 export const MenuCard = ({ name, link }) => {
   return (
     <div>
-      <div className="card" style={{ width: "18rem" }}>
-      {/*   <img
+      <div
+        className="card bg-secondary text-white"
+        style={{ width: "18rem", }}
+      >
+        {/*   <img
           src="../img/seg_vehiculo_red.png"
           className="card-img-top "
           alt="..."
@@ -16,7 +18,7 @@ export const MenuCard = ({ name, link }) => {
             Some quick example text to build on the card title and make up the
             bulk of the cards content.
           </p> */}
-          <Link to={link} className="btn btn-primary">
+          <Link to={link} className="btn btn-success boton ">
             Entrar
           </Link>
         </div>

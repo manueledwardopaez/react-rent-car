@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRentCar } from "../context/RentCarContext";
+import { ToastContainer, toast } from "react-toastify";
 
 export const Combustible = () => {
 
@@ -30,6 +31,7 @@ export const Combustible = () => {
         Estado: "Activo",
       });
       setCombustibleNombre(""); // Limpiar el campo después de crear
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     }
@@ -38,6 +40,7 @@ export const Combustible = () => {
   const handleDelete = async (id) => {
     try {
       await deleteData(tableName, id);
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
@@ -78,6 +81,7 @@ export const Combustible = () => {
 
   return (
     <div>
+      <ToastContainer />
 
         <h2>Combustibles</h2>
 

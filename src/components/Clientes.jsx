@@ -10,6 +10,7 @@ import {
   formatTarjeta,
   formatCedula,
 } from "../helpers/formatters";
+import { ToastContainer, toast } from "react-toastify";
 
 export const Clientes = () => {
   const tableName = "Clientes";
@@ -43,15 +44,15 @@ export const Clientes = () => {
     e.preventDefault();
 
     if (!validarCedula(cliente.cedula)) {
-      return alert("La cédula ingresada no es válida.");
+      return toast.error("La cédula ingresada no es válida.");
     }
 
     if (!validarTarjetaCredito(cliente.tarjetaCredito)) {
-      return alert("La tarjeta de credito no es válida.");
+      return toast.error("La tarjeta de credito no es válida.");
     }
 
     if (!validarLimiteCredito(cliente.limiteCredito)) {
-      return alert("El limite de credito no es suficiente.");
+      return toast.error("El limite de credito no es suficiente.");
     }
 
     try {
@@ -71,6 +72,7 @@ export const Clientes = () => {
         tipoPersona: "",
         estado: "",
       });
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     }
@@ -79,6 +81,7 @@ export const Clientes = () => {
   const handleDelete = async (id) => {
     try {
       await deleteData(tableName, id);
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
@@ -88,6 +91,7 @@ export const Clientes = () => {
     try {
       const nuevoEstado = estado === "Activo" ? "Inactivo" : "Activo";
       await updateData(tableName, id, { Estado: nuevoEstado });
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al actualizar el estado de la marca:", error);
     }
@@ -121,15 +125,15 @@ export const Clientes = () => {
     e.preventDefault();
 
     if (!validarCedula(cliente.cedula)) {
-      return alert("La cédula ingresada no es válida.");
+      return toast.error("La cédula ingresada no es válida.");
     }
 
     if (!validarTarjetaCredito(cliente.tarjetaCredito)) {
-      return alert("La tarjeta de credito no es válida.");
+      return toast.error("La tarjeta de credito no es válida.");
     }
 
     if (!validarLimiteCredito(cliente.limiteCredito)) {
-      return alert("El limite de credito no es suficiente.");
+      return toast.error("El limite de credito no es suficiente.");
     }
 
     try {
@@ -157,6 +161,7 @@ export const Clientes = () => {
 
   return (
     <div>
+       <ToastContainer />
       <h2>Clientes</h2>
 
       <form
@@ -183,7 +188,7 @@ export const Clientes = () => {
           required
           type="text"
           name="cedula"
-          placeholder="Cedula"
+          placeholder="Cédula"
           onChange={(e) =>
             setCliente((prevData) => ({
               ...prevData,
@@ -199,7 +204,7 @@ export const Clientes = () => {
           required
           type="number"
           name="tarjetaCredito"
-          placeholder="Tarjeta de Credito"
+          placeholder="Tarjeta de Crédito"
           onChange={(e) =>
             setCliente((prevData) => ({
               ...prevData,
@@ -215,7 +220,7 @@ export const Clientes = () => {
           required
           type="number"
           name="limiteCredito"
-          placeholder="Limite de Credito"
+          placeholder="Limite de Crédito"
           onChange={(e) =>
             setCliente((prevData) => ({
               ...prevData,
@@ -267,9 +272,9 @@ export const Clientes = () => {
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Cedula</th>
-              <th>Tarjeta de Credito</th>
-              <th>Limite de Credito</th>
+              <th>Cédula</th>
+              <th>Tarjeta de Crédito</th>
+              <th>Limite de Crédito</th>
               <th>Tipo de Persona</th>
               <th>Estado</th>
               <th>Opciones</th>

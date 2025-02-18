@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRentCar } from "../context/RentCarContext";
 import { validarCedula } from "../helpers/validators";
 import { formatCedula } from "../helpers/formatters";
+import { ToastContainer, toast } from "react-toastify";
 
 export const Empleados = () => {
   const tableName = "Empleados";
@@ -34,7 +35,7 @@ export const Empleados = () => {
     e.preventDefault();
 
     if (!validarCedula(empleado.cedula)) {
-      return alert("La cédula ingresada no es válida.");
+      return toast.error("La cédula ingresada no es válida.");
     }
 
     try {
@@ -53,7 +54,8 @@ export const Empleados = () => {
         comision: "",
         fechaIngreso: "",
         estado: "",
-      }); // Limpiar el campo después de crear
+      });
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     }
@@ -62,6 +64,7 @@ export const Empleados = () => {
   const handleDelete = async (id) => {
     try {
       await deleteData(tableName, id);
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
@@ -104,7 +107,7 @@ export const Empleados = () => {
     e.preventDefault();
 
     if (!validarCedula(empleado.cedula)) {
-      return alert("La cédula ingresada no es válida.");
+      return toast.error("La cédula ingresada no es válida.");
     }
 
     try {
@@ -132,6 +135,7 @@ export const Empleados = () => {
 
   return (
     <div>
+      <ToastContainer />
       <h2>Empleados</h2>
 
       <form
@@ -158,7 +162,7 @@ export const Empleados = () => {
           required
           type="text"
           name="cedula"
-          placeholder="Cedula"
+          placeholder="Cédula"
           onChange={(e) =>
             setEmpleado((prevData) => ({
               ...prevData,
@@ -201,7 +205,7 @@ export const Empleados = () => {
           style={{ width: "200px" }}
           aria-label="Selecciona una marca"
         >
-          <option value="">Elige una comision</option>
+          <option value="">Elige una comisión</option>
           <option value="3%">3%</option>
           <option value="5%">5%</option>
           <option value="7%">7%</option>
@@ -246,7 +250,7 @@ export const Empleados = () => {
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Cedula</th>
+              <th>Cédula</th>
               <th>Tanda</th>
               <th>Comision</th>
               <th>Fecha de Ingreso</th>

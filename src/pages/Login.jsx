@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabase/client.js";
 import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +14,7 @@ export const Login = () => {
       const result = await supabase.auth.signInWithOtp({
         email,
       });
-      console.log(result);
+      toast.success("Revisa tu correo!");
     } catch (error) {
       console.error(error);
     }
@@ -26,15 +28,24 @@ export const Login = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="email@site.com"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <button>Send</button>
-      </form>
+      <ToastContainer />
+
+      <div className="Login">
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit} className="">
+          <input
+            type="email"
+            name="email"
+            className="form-control w-100 mb-4"
+            placeholder="email@site.com"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button className="btn btn-outline-success w-100 boton">
+            Enviar
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

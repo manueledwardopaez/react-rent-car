@@ -4,6 +4,8 @@ import { useRentCar } from "../context/RentCarContext";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
+import { ToastContainer, toast } from "react-toastify";
+
 export const Inspecciones = () => {
   const tableName = "Inspecciones";
   const relations = `
@@ -17,7 +19,7 @@ export const Inspecciones = () => {
     "Delantera Derecha",
     "Trasera Izquierda",
     "Trasera Derecha",
-  ]
+  ];
 
   const inspeccionDefault = {
     vehiculo: "",
@@ -28,9 +30,9 @@ export const Inspecciones = () => {
     gato: "",
     totalCobro: "",
     roturasCristal: "",
-    estadoGomas: "",
+    estadoGomas: ["No"],
     fecha: "",
-    estado: "Activo",
+    estado: "En Proceso",
   };
 
   const [show, setShow] = useState(false);
@@ -83,7 +85,7 @@ export const Inspecciones = () => {
         RoturasCristal: inspeccion.roturasCristal,
         EstadoGomas: inspeccion.estadoGomas,
         Fecha: inspeccion.fecha,
-        Estado: "Activo",
+        Estado: "En Proceso",
       });
       setInspeccion({
         ...inspeccionDefault,
@@ -91,6 +93,7 @@ export const Inspecciones = () => {
       setVehiculosId(null);
       setEmpleadosId(null);
       setClientesId(null);
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     } finally {
@@ -102,6 +105,8 @@ export const Inspecciones = () => {
   const handleDelete = async (inspeccion) => {
     try {
       await deleteData(tableName, inspeccion.id);
+      toast.warning("Elimination Completed", { autoClose: 3000 });
+      /* handleToggleEstadoVehiculo(inspeccion.Vehiculo.id, "Inactivo"); */
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
@@ -109,13 +114,30 @@ export const Inspecciones = () => {
 
   const handleToggleEstado = async (id, estado) => {
     try {
-      const nuevoEstado = estado === "Activo" ? "Inactivo" : "Activo";
+      const nuevoEstado = estado === "En Proceso" ? "Terminado" : "En Proceso";
       await updateData(tableName, id, { Estado: nuevoEstado });
+      /*   estado === "En Proceso"
+        ? handleToggleEstadoVehiculo(vehiculo, "")
+        : handleToggleEstadoVehiculo(vehiculo, "Rentado"); */
     } catch (error) {
       console.error("Error al actualizar el estado de la marca:", error);
     }
   };
 
+  /*   const handleToggleEstadoVehiculo = async (id, estado) => {
+    try {
+      const nuevoEstado =
+        estado === "Activo"
+          ? "Inactivo"
+          : estado === "Inactivo"
+          ? "Activo" : estado
+
+      await updateData("Vehiculos", id, { Estado: nuevoEstado });
+    } catch (error) {
+      console.error("Error al actualizar el estado:", error);
+    }
+  };
+ */
   const handleEdit = (inspeccion) => {
     handleShow();
     setEditing(inspeccion);
@@ -130,7 +152,7 @@ export const Inspecciones = () => {
       roturasCristal: inspeccion.RoturasCristal,
       estadoGomas: inspeccion.EstadoGomas,
       fecha: inspeccion.Fecha,
-      estado: "Activo",
+      estado: inspeccion.Estado,
     });
     setVehiculosId(inspeccion.Vehiculo?.id);
     setEmpleadosId(inspeccion.Empleado?.id);
@@ -163,7 +185,7 @@ export const Inspecciones = () => {
         RoturasCristal: inspeccion.roturasCristal,
         EstadoGomas: inspeccion.estadoGomas,
         Fecha: inspeccion.fecha,
-        Estado: "Activo",
+        Estado: inspeccion.estado,
       });
       console.log(inspeccion.estadoGomas);
       setEditing(null);
@@ -183,10 +205,11 @@ export const Inspecciones = () => {
 
   return (
     <div>
+      <ToastContainer />
       <h2>Inspecciones</h2>
 
       <Button variant="primary" onClick={handleShow} className="mt-4 mb-4">
-        Rentar Vehiculo
+        Crear inspección
       </Button>
 
       <Modal show={show} onHide={handleClose} className="p-4">
@@ -322,7 +345,6 @@ export const Inspecciones = () => {
               <option value="">Ralladuras</option>
               <option value="Si">Si</option>
               <option value="No">No</option>
-            
             </select>
           </div>
 
@@ -438,9 +460,8 @@ export const Inspecciones = () => {
 
           <div className="w-100">
             <label className="form-label">Estado de las Gomas</label>
-              
+
             <div className="d-flex flex-wrap gap-2">
-              
               {gomas.map((goma, index) => (
                 <div key={index} className="form-check">
                   <input
@@ -489,7 +510,7 @@ export const Inspecciones = () => {
       {loading ? (
         <p>Cargando...</p>
       ) : !data.Inspecciones || data.Inspecciones.length === 0 ? (
-        <p>No hay inspeccions disponibles</p>
+        <p>No hay inspecciones disponibles</p>
       ) : (
         <div className="row">
           {data.Inspecciones.map((inspeccion) => (
@@ -528,7 +549,7 @@ export const Inspecciones = () => {
                     <strong>Estado:</strong>
                     <span
                       className={`badge ${
-                        inspeccion.Estado === "Activo"
+                        inspeccion.Estado === "Terminado"
                           ? "bg-success"
                           : "bg-danger"
                       } ms-2`}
@@ -555,8 +576,8 @@ export const Inspecciones = () => {
                         handleToggleEstado(inspeccion.id, inspeccion.Estado)
                       }
                     >
-                      {inspeccion.Estado === "Activo"
-                        ? "Desactivar"
+                      {inspeccion.Estado === "En Proceso"
+                        ? "Terminar"
                         : "Activar"}
                     </button>
                   </div>

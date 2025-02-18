@@ -4,7 +4,7 @@ import { NotFound } from "./pages/NotFound";
 import { Login } from "./pages/Login";
 
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "./supabase/client";
 import { RentCarContextProvider } from "./context/RentCarContext.jsx";
 import { MarcasPages } from "./pages/MarcasPages.jsx";
@@ -19,15 +19,20 @@ import { VehiculosPages } from "./pages/VehiculosPages.jsx";
 import { RentasPages } from "./pages/RentasPages.jsx";
 import { InspeccionesPages } from "./pages/InspeccionesPages.jsx";
 import { ReporteRentasPages } from "./pages/ReporteRentasPages.jsx";
+import { NavBar } from "./components/NavBar.jsx";
 
 function App() {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (!session) {
           navigate("/login");
+          setIsAuthenticated(false);
+        } else {
+          setIsAuthenticated(true);
         }
       }
     );
@@ -40,6 +45,7 @@ function App() {
   return (
     <div>
       <RentCarContextProvider>
+        {isAuthenticated && <NavBar />}
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/tasks" element={<TaskPage />} />
@@ -55,8 +61,7 @@ function App() {
           <Route path="/inspecciones" element={<InspeccionesPages />}></Route>
           <Route path="/reporteRentas" element={<ReporteRentasPages />}></Route>
 
-
-            <Route path="/login" element={<Login />}></Route>
+          <Route path="/login" element={<Login />}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </RentCarContextProvider>

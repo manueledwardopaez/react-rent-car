@@ -5,9 +5,9 @@ export const generarReporteVentas = (rentas) => {
   const doc = new jsPDF();
 
   
-  doc.setFontSize(18);
-  doc.text("Reporte de Rentas", 10, 10);
   doc.setFontSize(12);
+  doc.text("Reporte de Rentas", 10, 10);
+  doc.setFontSize(8);
 
 
   let yPosition = 20;

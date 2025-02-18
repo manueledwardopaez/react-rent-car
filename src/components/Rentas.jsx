@@ -5,6 +5,8 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { validarRenta } from "../helpers/validators";
 
+import { ToastContainer, toast } from "react-toastify";
+
 export const Rentas = () => {
   const tableName = "Rentas";
   const relations = `
@@ -26,7 +28,7 @@ export const Rentas = () => {
     estado: "Activo",
   };
 
-  const [filtro, setFiltro] = useState(""); 
+  const [filtro, setFiltro] = useState("");
 
   const [show, setShow] = useState(false);
 
@@ -61,9 +63,6 @@ export const Rentas = () => {
     fetchData("Clientes");
     fetchData(tableName, relations);
     setIsSubmitted(false);
-    setTimeout(() => {
-      console.log(data.Rentas)
-    }, 4000);
   }, [fetchData, relations, isSubmitted]);
 
   const handleSubmit = async (e) => {
@@ -71,7 +70,7 @@ export const Rentas = () => {
 
     const validacion = validarRenta(renta);
     if (!validacion.valido) {
-      alert(validacion.mensaje);
+      toast.error(validacion.mensaje);
       return;
     }
 
@@ -86,7 +85,7 @@ export const Rentas = () => {
         TotalCobro: renta.totalCobro,
         CantDias: renta.cantDias,
         Comentario: renta.comentario,
-        Estado: "Activo",
+        Estado: "En Proceso",
       });
       setRenta({
         ...rentaDefault,
@@ -95,6 +94,7 @@ export const Rentas = () => {
       setEmpleadosId(null);
       setClientesId(null);
       handleToggleEstadoVehiculo(vehiculosId, "Activo");
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     } finally {
@@ -107,15 +107,20 @@ export const Rentas = () => {
     try {
       await deleteData(tableName, renta.id);
       handleToggleEstadoVehiculo(renta.Vehiculo.id, "Rentado");
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
   };
 
-  const handleToggleEstado = async (id, estado) => {
+  const handleToggleEstado = async (id, estado, vehiculo) => {
     try {
-      const nuevoEstado = estado === "Activo" ? "Inactivo" : "Activo";
+      const nuevoEstado = estado === "En Proceso" ? "Terminado" : "En Proceso";
       await updateData(tableName, id, { Estado: nuevoEstado });
+      estado === "En Proceso"
+        ? handleToggleEstadoVehiculo(vehiculo, "Rentado")
+        : handleToggleEstadoVehiculo(vehiculo, "Activo");
+      console.log(vehiculo);
     } catch (error) {
       console.error("Error al actualizar el estado de la marca:", error);
     }
@@ -168,7 +173,7 @@ export const Rentas = () => {
 
     const validacion = validarRenta(renta);
     if (!validacion.valido) {
-      alert(validacion.mensaje);
+      toast.error(validacion.mensaje);
       return;
     }
 
@@ -210,6 +215,7 @@ export const Rentas = () => {
 
   return (
     <div>
+      <ToastContainer />
       <h2>Rentas</h2>
 
       <Button variant="primary" onClick={handleShow} className="mt-4 mb-4">
@@ -508,7 +514,7 @@ export const Rentas = () => {
               <div className="card shadow-sm">
                 <div className="card-body">
                   <h5 className="card-title mb-4">Renta #{renta.id}</h5>
-                  <p className="card-text text-start">
+                  <p className="card-text text-start text-dark">
                     <strong>Vehículo:</strong> {renta.Vehiculo.Descripcion}{" "}
                     <br />
                     <strong>Empleado:</strong> {renta.Empleado.Nombre} <br />
@@ -523,7 +529,9 @@ export const Rentas = () => {
                     <strong>Estado:</strong>
                     <span
                       className={`badge ${
-                        renta.Estado === "Activo" ? "bg-success" : "bg-danger"
+                        renta.Estado === "Terminado"
+                          ? "bg-success"
+                          : "bg-danger"
                       } ms-2`}
                     >
                       {renta.Estado}
@@ -544,9 +552,15 @@ export const Rentas = () => {
                     </button>
                     <button
                       className="btn btn-sm btn-secondary"
-                      onClick={() => handleToggleEstado(renta.id, renta.Estado)}
+                      onClick={() =>
+                        handleToggleEstado(
+                          renta.id,
+                          renta.Estado,
+                          renta.Vehiculo.id
+                        )
+                      }
                     >
-                      {renta.Estado === "Activo" ? "Desactivar" : "Activar"}
+                      {renta.Estado === "En Proceso" ? "Terminar" : "Abrir"}
                     </button>
                   </div>
                 </div>

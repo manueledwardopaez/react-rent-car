@@ -3,8 +3,9 @@ import { useRentCar } from "../context/RentCarContext";
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-/* import { ModalEliminar } from "../Modals/ModalEliminar";
- */
+
+import { ToastContainer, toast } from "react-toastify";
+
 export const Vehiculos = () => {
   const tableName = "Vehiculos";
   const relations = `
@@ -85,6 +86,7 @@ export const Vehiculos = () => {
       setModeloId(null);
       setTipoVehiculoId(null);
       setTipoCombustibleId(null);
+      toast.success("Operation Successfull", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al crear la marca:", error);
     } finally {
@@ -96,6 +98,7 @@ export const Vehiculos = () => {
   const handleDelete = async (id) => {
     try {
       await deleteData(tableName, id);
+      toast.warning("Elimination Completed", { autoClose: 3000 });
     } catch (error) {
       console.error("Error al eliminar la marca:", error);
     }
@@ -174,6 +177,7 @@ export const Vehiculos = () => {
 
   return (
     <div>
+      <ToastContainer />
       <h2>Vehiculos</h2>
 
       <Button variant="primary" onClick={handleShow} className="mt-4 mb-4">
@@ -628,7 +632,7 @@ export const Vehiculos = () => {
               <div className="card shadow-sm">
                 <div className="card-body ">
                   <h5 className="card-title mb-4">{vehiculo.Descripcion}</h5>
-                  <p className="card-text text-start">
+                  <p className="card-text text-start text-dark">
                     <strong>Marca:</strong> {vehiculo.Marca.Nombre} <br />
                     <strong>Modelo:</strong> {vehiculo.Modelo.Nombre} <br />
                     <strong>Tipo de Vehículo:</strong>{" "}
